@@ -1,0 +1,40 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment & secrets (never commit credentials)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Backend (Laravel)
+backend/vendor/
+backend/node_modules/
+backend/public/build/
+backend/public/hot
+backend/public/storage
+backend/storage/*.key
+backend/storage/logs/
+backend/storage/pail/
+backend/storage/framework/cache/data/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+backend/bootstrap/cache/*.php
+backend/database/*.sqlite
+backend/database/*.sqlite-journal
+
+# IDE & tools
+.idea/
+.vscode/
+.cursor/
+*.log

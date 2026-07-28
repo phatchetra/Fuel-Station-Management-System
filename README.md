@@ -13,7 +13,6 @@ Fuel-Ledger/
 ## Features
 
 - Three fuel types: សាំងធម្មតា (Regular), សាំងស៊ុបពែរ (Premium), ម៉ាស៊ូត (Diesel)
-- Fuel sales with automatic FIFO stock deduction
 - Refills that create new stock batches
 - Daily sessions with open/closed periods
 - Daily expense management
@@ -44,22 +43,6 @@ php artisan migrate:fresh --seed
 php artisan serve
 ```
 
-API: http://localhost:8000
-
-Update `backend/.env` for your MySQL credentials:
-
-```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=fuel_ledger
-DB_USERNAME=root
-DB_PASSWORD=
-
-SESSION_DRIVER=database
-SANCTUM_STATEFUL_DOMAINS=localhost,localhost:5173,127.0.0.1,127.0.0.1:5173
-```
-
 ### 3. Frontend
 
 ```bash
@@ -68,39 +51,10 @@ npm install
 npm run dev
 ```
 
-App: http://localhost:5173
-
-The Vite dev server proxies `/api` and `/sanctum` to `http://localhost:8000`.
-
 ## Default admin
 
 - Email: `admin@fuelledger.local`
 - Password: `password`
-
-## Authentication
-
-Uses **Laravel Sanctum SPA mode** with session cookies and CSRF protection:
-
-1. Frontend fetches `/sanctum/csrf-cookie`
-2. Login via `POST /api/auth/login` with `credentials: 'include'`
-3. All API requests include session cookies and `X-XSRF-TOKEN` header
-
-## Production deployment
-
-| Layer | Suggested hosting |
-|-------|-------------------|
-| React SPA | Vercel, Netlify, Cloudflare Pages |
-| Laravel API | Forge, Railway, VPS |
-| MySQL | Managed MySQL (Aiven, RDS, etc.) |
-
-Production checklist:
-
-- Set `SANCTUM_STATEFUL_DOMAINS` to your frontend domain (e.g. `app.example.com`)
-- Set `APP_URL` to your API origin
-- Configure CORS and session cookie domain for cross-subdomain auth if needed
-- Set `SESSION_SECURE_COOKIE=true` and use HTTPS
-- Build frontend with `npm run build` and serve `frontend/dist/`
-- Optionally set `VITE_API_URL` to the API origin if not using a reverse proxy
 
 ## UI design
 
@@ -115,8 +69,6 @@ Dark dashboard theme with gold brand accent:
 | Muted text | `#8b95a8` |
 
 Fonts: **Siemreap** (Khmer UI via Fontsource).
-
-Reusable CSS classes: `.card`, `.btn-gold`, `.btn-primary`, `.fuel-card-v2`, `.stat-card`
 
 ## Before pushing to GitHub
 

@@ -33,12 +33,12 @@ export default function Header({
   }
 
   const stationTitle = user?.name
-    ? `ការ៉ាស់សាំង ${user.name}`
-    : "ការ៉ាស់សាំង";
+    ? `ការ៉ាស់សាំងម៉ាក់ខ្ញុំ ${user.name}`
+    : "ការ៉ាស់សាំងម៉ាក់ខ្ញុំ";
 
   return (
-    <header className="card">
-      <div className="flex items-center gap-2 min-w-0 mb-4">
+    <header className="card app-header">
+      <div className="app-header-brand flex items-center gap-2 min-w-0 mb-4">
         <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[rgb(242_169_59/0.12)] text-[var(--gold)] shrink-0">
           <IconFuel />
         </span>
@@ -46,8 +46,8 @@ export default function Header({
       </div>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div>
-          <h1 className="text-[1.25rem] sm:text-[1.75rem] font-bold leading-snug tracking-tight">
+        <div className="min-w-0">
+          <h1 className="text-[1.25rem] sm:text-[1.75rem] font-bold leading-snug tracking-tight break-words">
             {stationTitle}
           </h1>
         </div>

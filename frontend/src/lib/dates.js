@@ -146,6 +146,27 @@ export function toDateInputValue(date = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
+/**
+ * Full timestamp for a date picked in a date input (YYYY-MM-DD).
+ * Date-only values carry no time, so a record dated "today" would fall
+ * before the session start (which is the exact previous close time) and
+ * be excluded from session totals. Picking today returns the current
+ * time; other days return local midnight of that day.
+ */
+export function dateInputToTimestamp(value) {
+  const now = new Date();
+  if (!value) return now;
+
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value).trim());
+  if (!match) {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? now : parsed;
+  }
+
+  const picked = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return isSameDay(picked, now) ? now : picked;
+}
+
 /** Check if two dates are the same calendar day */
 export function isSameDay(dateA, dateB) {
   const a = new Date(dateA);

@@ -18,7 +18,7 @@ class DebtPayment extends Model
     protected function casts(): array
     {
         return [
-            'paid_at' => 'date',
+            'paid_at' => 'datetime',
         ];
     }
 

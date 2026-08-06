@@ -5,7 +5,7 @@ import EmptyState from "./EmptyState";
 import StockBatchEditModal from "./StockBatchEditModal";
 import StockBatchDeleteModal from "./StockBatchDeleteModal";
 import { formatKhmerLiters } from "@/lib/formatters";
-import { formatKhmerDate } from "@/lib/dates";
+import { formatKhmerDate, formatKhmerDateCompact } from "@/lib/dates";
 
 const FUEL_CHIP = {
   green: "report-chip-green",
@@ -19,6 +19,46 @@ function BatchStatusBadge({ status, statusLabel }) {
     <span className={`stock-batch-status ${isActive ? "is-active" : "is-depleted"}`}>
       {statusLabel}
     </span>
+  );
+}
+
+function BatchProgress({ percent }) {
+  return (
+    <div
+      className="stock-batch-progress"
+      role="progressbar"
+      aria-valuenow={percent}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
+      <div
+        className="stock-batch-progress-fill"
+        style={{ width: `${percent}%` }}
+      />
+    </div>
+  );
+}
+
+function BatchActions({ batch, onEdit, onDelete }) {
+  return (
+    <div className="stock-batch-actions">
+      <button
+        type="button"
+        className="btn-ghost-sm"
+        onClick={() => onEdit(batch)}
+        title={batch.editBlockReason || undefined}
+      >
+        កែប្រែ
+      </button>
+      <button
+        type="button"
+        className="btn-delete history-delete-btn"
+        onClick={() => onDelete(batch)}
+        title={batch.deleteBlockReason || undefined}
+      >
+        លុប
+      </button>
+    </div>
   );
 }
 
@@ -95,7 +135,8 @@ export default function StockBatchesSection({
           <EmptyState message="មិនទាន់មានប្រវត្តិស្តុកចូល" />
         ) : (
           <>
-            <div className="stock-batches-table-wrap">
+            {/* Desktop / tablet table */}
+            <div className="stock-batches-table-wrap stock-batches-desktop">
               <table className="stock-batches-table">
                 <thead>
                   <tr>
@@ -139,47 +180,88 @@ export default function StockBatchesSection({
                             status={batch.status}
                             statusLabel={batch.statusLabel}
                           />
-                          <div
-                            className="stock-batch-progress"
-                            role="progressbar"
-                            aria-valuenow={batch.progressPercent}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                          >
-                            <div
-                              className="stock-batch-progress-fill"
-                              style={{ width: `${batch.progressPercent}%` }}
-                            />
-                          </div>
+                          <BatchProgress percent={batch.progressPercent} />
                         </td>
                         <td>
                           {batch.depletedAt ? formatKhmerDate(batch.depletedAt) : "—"}
                         </td>
                         <td>
-                          <div className="stock-batch-actions">
-                            <button
-                              type="button"
-                              className="btn-ghost-sm"
-                              onClick={() => handleEditClick(batch)}
-                              title={batch.editBlockReason || undefined}
-                            >
-                              កែប្រែ
-                            </button>
-                            <button
-                              type="button"
-                              className="btn-delete history-delete-btn"
-                              onClick={() => handleDeleteClick(batch)}
-                              title={batch.deleteBlockReason || undefined}
-                            >
-                              លុប
-                            </button>
-                          </div>
+                          <BatchActions
+                            batch={batch}
+                            onEdit={handleEditClick}
+                            onDelete={handleDeleteClick}
+                          />
                         </td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile stacked cards — no horizontal scroll */}
+            <div className="stock-batches-cards stock-batches-mobile">
+              {stockBatches.map((batch) => {
+                const chipClass =
+                  FUEL_CHIP[batch.fuelType?.accentColor] ?? FUEL_CHIP.green;
+
+                return (
+                  <article key={batch.id} className="stock-batch-card">
+                    <div className="stock-batch-card-top">
+                      <span className={`report-chip ${chipClass}`}>
+                        {batch.fuelType?.nameKhmer ?? "—"}
+                      </span>
+                      <BatchStatusBadge
+                        status={batch.status}
+                        statusLabel={batch.statusLabel}
+                      />
+                    </div>
+
+                    <p className="stock-batch-card-date">
+                      {formatKhmerDateCompact(batch.receivedAt)}
+                    </p>
+
+                    <div className="stock-batch-card-stats">
+                      <div className="stock-batch-card-stat">
+                        <span className="stock-batch-card-stat-label">ដើម</span>
+                        <span className="stock-batch-card-stat-value tabular-nums en">
+                          {formatKhmerLiters(batch.originalLiters)}
+                        </span>
+                      </div>
+                      <div className="stock-batch-card-stat">
+                        <span className="stock-batch-card-stat-label">លក់រួច</span>
+                        <span className="stock-batch-card-stat-value tabular-nums en">
+                          {formatKhmerLiters(batch.soldLiters)}
+                        </span>
+                      </div>
+                      <div className="stock-batch-card-stat">
+                        <span className="stock-batch-card-stat-label">នៅសល់</span>
+                        <span className="stock-batch-card-stat-value tabular-nums en">
+                          {formatKhmerLiters(batch.remainingLiters)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <BatchProgress percent={batch.progressPercent} />
+
+                    {batch.depletedAt && (
+                      <p className="stock-batch-card-meta">
+                        លក់អស់: {formatKhmerDateCompact(batch.depletedAt)}
+                      </p>
+                    )}
+
+                    {batch.note && (
+                      <p className="stock-batch-note">{batch.note}</p>
+                    )}
+
+                    <BatchActions
+                      batch={batch}
+                      onEdit={handleEditClick}
+                      onDelete={handleDeleteClick}
+                    />
+                  </article>
+                );
+              })}
             </div>
           </>
         )}

@@ -70,7 +70,7 @@ function StockGauge({ percent, color }) {
 
   return (
     <div className="fuel-gauge shrink-0">
-      <svg viewBox="0 0 90 48" className="w-[5.75rem] h-[3.25rem]" aria-hidden>
+      <svg viewBox="0 0 90 48" className="fuel-gauge-svg" aria-hidden>
         <path
           d={trackPath}
           fill="none"

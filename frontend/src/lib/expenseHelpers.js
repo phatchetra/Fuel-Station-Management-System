@@ -2,6 +2,7 @@
  * Daily expense helpers — validation and display (KHR only).
  */
 
+import { dateInputToTimestamp } from "./dates";
 import { formatKHR } from "./formatters";
 
 export const EXPENSE_CURRENCY_KHR = "KHR";
@@ -15,9 +16,15 @@ export function getExpenseAmountKHR(expense) {
   return Number(expense?.amount) || 0;
 }
 
-export function filterSessionExpenses(expenses, sessionStartAt) {
-  const start = new Date(sessionStartAt);
-  return (expenses ?? []).filter((expense) => new Date(expense.expenseDate) >= start);
+/**
+ * Expenses in the current open session.
+ * expense_date is stored date-only (midnight), so comparing it against the
+ * session start timestamp wrongly drops same-day expenses. Session
+ * membership is tracked by dailyReportId instead: close-day stamps the
+ * report id, and the API only returns unclosed expenses.
+ */
+export function filterSessionExpenses(expenses) {
+  return (expenses ?? []).filter((expense) => expense.dailyReportId == null);
 }
 
 export function calculateTotalExpensesKHR(expenses) {
@@ -61,6 +68,6 @@ export function validateExpense({ category, amount, expenseDate }) {
     amount: amountKHR,
     amountKHR,
     currency: EXPENSE_CURRENCY_KHR,
-    expenseDate: parsedDate,
+    expenseDate: dateInputToTimestamp(expenseDate),
   };
 }

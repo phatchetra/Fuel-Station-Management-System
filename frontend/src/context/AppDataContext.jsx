@@ -12,7 +12,7 @@ import {
 } from "@/lib/calculations";
 import { normalizeDailyReport, removeDebtFromDailyReports } from "@/lib/dailyReportHelpers";
 import { filterSessionExpenses, validateExpense } from "@/lib/expenseHelpers";
-import { getStartOfDay, toDateInputValue } from "@/lib/dates";
+import { dateInputToTimestamp, getStartOfDay, toDateInputValue } from "@/lib/dates";
 import { deriveDebtStatus, normalizeDebtFromApi } from "@/lib/debtHelpers";
 
 export const AppDataContext = createContext(null);
@@ -169,8 +169,8 @@ export function AppDataProvider({ user, todayLabel, children }) {
   );
 
   const sessionExpenses = useMemo(
-    () => filterSessionExpenses(expenses, sessionStartAt),
-    [expenses, sessionStartAt]
+    () => filterSessionExpenses(expenses),
+    [expenses]
   );
 
   /** All sales recorded today — history table (edit vs correction by session) */
@@ -474,7 +474,9 @@ export function AppDataProvider({ user, todayLabel, children }) {
         customerName: debtData.customerName.trim(),
         phoneOrNote: debtData.phoneOrNote?.trim() || undefined,
         totalAmount,
-        debtDate: debtData.debtDate,
+        // Date-only values land at midnight, before the session start —
+        // send the real time so the debt counts in the open session.
+        debtDate: dateInputToTimestamp(debtData.debtDate),
       });
       await refreshAfterDebtChange();
       return { ok: true };

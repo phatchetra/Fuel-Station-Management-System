@@ -86,7 +86,7 @@ export default function DailySummary({
           សរុបគណនាដោយស្វ័យប្រវត្តិពីកំណត់ត្រាលក់ក្នុងវគ្គបច្ចុប្បន្ន
         </p>
 
-        <div className="summary-table-wrap overflow-x-auto">
+        <div className="summary-table-wrap">
           <table className="summary-table">
             <colgroup>
               <col className="summary-col-type" />

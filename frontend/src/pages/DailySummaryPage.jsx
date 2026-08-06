@@ -20,7 +20,7 @@ export default function DailySummaryPage() {
   } = useAppData();
 
   return (
-    <div className="space-y-7">
+    <div className="page-shell space-y-7">
       <DailySummary
         summary={activeSummary}
         closingFinancials={closingFinancials}

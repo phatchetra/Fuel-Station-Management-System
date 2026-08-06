@@ -87,7 +87,7 @@ class DebtController extends Controller
             DebtPayment::create([
                 'debt_id' => $debt->id,
                 'amount' => $validated['amount'],
-                'paid_at' => now()->toDateString(),
+                'paid_at' => now(),
                 'created_by_id' => $request->user()->id,
             ]);
 

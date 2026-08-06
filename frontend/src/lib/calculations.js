@@ -3,6 +3,7 @@
  */
 
 import { getStartOfDay } from "@/lib/dates";
+import { filterSessionExpenses } from "@/lib/expenseHelpers";
 export { formatKHR, formatUSD } from "@/lib/formatters";
 
 /** Calculate sale amount in Riel */
@@ -268,9 +269,7 @@ export function buildClosingFinancials(
 ) {
   const newDebts = collectSessionDebts(debts, sessionStartAt, fuels);
   const repayments = collectSessionRepayments(debts, sessionStartAt);
-  const sessionExpenses = (expenses ?? []).filter(
-    (expense) => new Date(expense.expenseDate) >= new Date(sessionStartAt)
-  );
+  const sessionExpenses = filterSessionExpenses(expenses);
 
   const fuelSalesTotal = summary.fuelTotalKHR ?? 0;
   const newDebtTotal = newDebts.reduce((sum, debt) => sum + (debt.totalAmount ?? 0), 0);

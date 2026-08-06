@@ -13,6 +13,14 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        // Sanctum only attaches session middleware when the request's Origin/Referer
+        // matches sanctum.stateful, so without a session there is nowhere to store the login.
+        if (! $request->hasSession()) {
+            return response()->json([
+                'error' => 'Stateless request: send an Origin or Referer header that matches SANCTUM_STATEFUL_DOMAINS.',
+            ], 419);
+        }
+
         try {
             $validated = $request->validate([
                 'email' => ['required', 'string'],

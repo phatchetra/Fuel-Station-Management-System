@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "@/components/Header";
 import Sidebar from "@/layouts/Sidebar";
@@ -14,6 +14,11 @@ function AppShellContent({ user }) {
     handleExchangeRateSave,
     activeSummary,
   } = useAppData();
+
+  useEffect(() => {
+    document.body.classList.toggle("sidebar-drawer-open", sidebarOpen);
+    return () => document.body.classList.remove("sidebar-drawer-open");
+  }, [sidebarOpen]);
 
   return (
     <div className="app-shell dashboard-page">

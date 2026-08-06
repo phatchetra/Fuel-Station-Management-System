@@ -17,9 +17,9 @@ const NAV_ITEMS = [
   { to: "/", label: "ផ្ទាំងគ្រប់គ្រង", end: true, Icon: IconDashboard },
   { to: "/stock-batches", label: "ស្តុក", Icon: IconStock },
   { to: "/fuels", label: "ប្រេង", Icon: IconFuel },
-  { to: "/daily-summary", label: "ការគណនា", Icon: IconCalculator },
-  { to: "/expenses", label: "ការចំណាយ", Icon: IconExpense },
   { to: "/debts", label: "បំណុល", Icon: IconDebt },
+  // { to: "/expenses", label: "ការចំណាយ", Icon: IconExpense },
+  { to: "/daily-summary", label: "ការគណនា", Icon: IconCalculator },
   { to: "/reports", label: "របាយការណ៍", Icon: IconReport },
 ];
 
